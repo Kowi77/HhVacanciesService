@@ -1,6 +1,6 @@
 package kov.develop.model;
 
-/*import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -16,10 +16,10 @@ import java.util.List;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "vacancies")*/
+@Table(name = "vacancies")
 public class Vacancy {
 
-   /* @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
@@ -45,5 +45,5 @@ public class Vacancy {
         this.published_at = published_at;
         this.employer = employer;
         this.salary = salary;
-    }*/
+    }
 }
