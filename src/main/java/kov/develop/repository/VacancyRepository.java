@@ -22,4 +22,8 @@ public class VacancyRepository {
             return em.merge(vacancy);
         }
     }
+
+    public String aaa(){
+        return "ZLATAN !!";
+    }
 }

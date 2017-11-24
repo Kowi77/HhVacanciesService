@@ -2,6 +2,7 @@ package kov.develop.Services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kov.develop.config.ApplicationContextProvider;
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
 import org.springframework.context.ApplicationContext;
@@ -24,21 +25,20 @@ public class HhVacanciesService {
     private static String PER_PAGE = "50";                                     // количество вакансий в одном запросе
     private static String URL = HH_VACANCIES_URL + "?area=" + AREA_ID + "&specialization=" + SPECIALIZATION + "&per_page=" + PER_PAGE + "&page=";
 
+    private final VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
+
 
 
 
 
 
     public static void main(String[] args) throws Exception {
+        System.out.println(ApplicationContextProvider.getApplicationContext());
 
-        ApplicationContext ctx = new FileSystemXmlApplicationContext("E:\\Java\\HhVacancies\\src\\main\\webapp\\WEB-INF\\spring-context\\portlet\\HhVacancies-portlet.xml");
+      HhVacanciesService vr = new HhVacanciesService();
+      //  VacancyRepository repository = (VacancyRepository) ctx.getBean("vacancyRepository");
 
-
-        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        HhVacanciesService vr = new HhVacanciesService();
-        VacancyRepository repository = (VacancyRepository) ctx.getBean("vacancyRepository");
-
-        int pages = vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + "0", 1000), repository);
+        int pages = vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + "0", 1000));
         System.out.println(pages);
 
       /*  for(int i = 1; i < pages; i++){
@@ -47,7 +47,7 @@ public class HhVacanciesService {
         }*/
     }
 
-    private Integer LoadAndSaveVacanciesFromHh(String json, VacancyRepository repository) throws IOException {
+    private Integer LoadAndSaveVacanciesFromHh(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodes = objectMapper.readTree(json).path("items");
         Iterator<JsonNode> vacancies = nodes.elements();
@@ -63,7 +63,7 @@ public class HhVacanciesService {
             String employer = vacancy.at("/employer/name").asText();
             Vacancy vacancy1 = new Vacancy(name, date, employer, salary);
             System.out.println(vacancy1);
-            repository.save(vacancy1);
+            repository.aaa();
 
         }
 
