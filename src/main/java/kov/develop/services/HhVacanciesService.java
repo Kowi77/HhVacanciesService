@@ -1,12 +1,10 @@
-package kov.develop.Services;
+package kov.develop.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kov.develop.config.ApplicationContextProvider;
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;

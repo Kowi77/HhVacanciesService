@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "vacancies")
-public class Vacancy {
+public class Vacancy implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +41,15 @@ public class Vacancy {
     @Size(max = 30)
     private String salary;
 
-    public Vacancy(String name, LocalDateTime published_at, String employer, String salary) {
+    public Vacancy(@JsonProperty("name") String name,
+                   @JsonProperty("published_at") LocalDateTime published_at,
+                   @JsonProperty("employer") String employer,
+                   @JsonProperty("salary") String salary) {
         this.name = name;
         this.published_at = published_at;
         this.employer = employer;
         this.salary = salary;
     }
+
+
 }
