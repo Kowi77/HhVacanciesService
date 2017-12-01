@@ -8,6 +8,7 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 	</portlet>
+	<!--<requires-namespaced-parameters>false</requires-namespaced-parameters>-->
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

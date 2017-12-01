@@ -22,16 +22,8 @@
 
 <portlet:defineObjects />
 
-This is the <b>HhVacancies</b> portlet.<br />
+This is the <b>HhVacancies</b> portlet with ZLATAN.<br />
 
-<portlet:actionURL var="actionOneMethodURL">
-    <portlet:param name="action" value="actionOne"></portlet:param>
-</portlet:actionURL>
-
-<form:form name="addForm" commandName="vacancy" method="post"
-           action="${actionOneMethodURL}">
-    <form:input path="userName" />
-    <input type="submit">
-</form:form>
-
-<c:out escapeXml="true" value="${releaseInfo}" />.
+<div>
+    ${today}
+</div>

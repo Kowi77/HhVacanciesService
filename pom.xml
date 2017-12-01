@@ -15,7 +15,7 @@
 		<com.liferay.portal.tools.theme.builder.outputDir>E:/Java/liferay-ce-portal-7.0-ga4/tools</com.liferay.portal.tools.theme.builder.outputDir>
 		<liferay.version>6.2.3</liferay.version>
 		<liferay.maven.plugin.version>6.2.2</liferay.maven.plugin.version>
-        <spring.version>3.0.7.RELEASE</spring.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
         <slf4j.version>1.7.25</slf4j.version>
         <webjars-bootstrap.version>3.3.7-1</webjars-bootstrap.version>
         <log4j.version>2.4.1</log4j.version>
@@ -208,7 +208,17 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc-portlet</artifactId>
 			<version>${spring.version}</version>

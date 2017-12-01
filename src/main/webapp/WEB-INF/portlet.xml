@@ -7,11 +7,12 @@
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 		<init-param>
 			<name>contextConfigLocation</name>
-			<value>/WEB-INF/spring-context/portlet/HhVacancies-portlet.xml</value>
+			<value>classpath:spring/spring-mvc-configuration.xml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
 			<title>HhVacancies</title>
