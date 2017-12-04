@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * For replace @Autowired in our classes
  */
 
-//@Component("applicationContextProvider")
+@Component("applicationContextProvider")
 public class ApplicationContextProvider implements ApplicationContextAware {
 
     private static ApplicationContext ctx = null;

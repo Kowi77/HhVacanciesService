@@ -1,27 +1,16 @@
 package kov.develop.repository;
 
 import kov.develop.model.Vacancy;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-public class VacancyRepository {
+import java.util.List;
 
-    @PersistenceContext
-    private EntityManager em;
+@Repository
+public interface VacancyRepository extends JpaRepository<Vacancy, Integer> {
 
-    @Transactional
-    public Vacancy save(Vacancy vacancy) {
-        if (vacancy.getId() == null) {
-            em.persist(vacancy);
-            return vacancy;
-        } else {
-            return em.merge(vacancy);
-        }
-    }
+ public List<Vacancy> findAll();
 
-    public String aaa(){
-        return "ZLATAN !!";
-    }
+
 }

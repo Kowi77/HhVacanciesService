@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kov.develop.config.ApplicationContextProvider;
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
+import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class HhVacanciesService {
     private static String PER_PAGE = "50";                                     // количество вакансий в одном запросе
     private static String URL = HH_VACANCIES_URL + "?area=" + AREA_ID + "&specialization=" + SPECIALIZATION + "&per_page=" + PER_PAGE + "&page=";
 
-    private final VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
+    //private final VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
 
 
 
@@ -31,10 +32,13 @@ public class HhVacanciesService {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println(ApplicationContextProvider.getApplicationContext());
+
+        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
+        System.out.println(ctx);
 
       HhVacanciesService vr = new HhVacanciesService();
-      //  VacancyRepository repository = (VacancyRepository) ctx.getBean("vacancyRepository");
+
+     // VacancyRepository repository = (VacancyRepository) ctx.getBean("vacancyRepository");
 
         int pages = vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + "0", 1000));
         System.out.println(pages);
@@ -61,7 +65,7 @@ public class HhVacanciesService {
             String employer = vacancy.at("/employer/name").asText();
             Vacancy vacancy1 = new Vacancy(name, date, employer, salary);
             System.out.println(vacancy1);
-            repository.aaa();
+            //repository.aaa();
 
         }
 
