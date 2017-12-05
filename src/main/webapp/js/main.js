@@ -61,10 +61,6 @@ var form=$('#detailsForm');
             var json = JSON.parse(stringData);
             $(json).each(function () {
                 this.date = this.date.replace('T', ' ').substr(0, 16);
-                console.log(this.employer);
-                n = this.employer.split(' ');
-                this.employer = n[0] + " " + n[1].substr(0,1) + ". " + n[2].substr(0, 1) + ".";
-                console.log(this.employer);
             });
             return json;
         }
@@ -90,7 +86,7 @@ function updateTable() {
 //Datatable
 jQuery(document).ready(function () {
     $.noConflict();
-    datatableApi = jQuery("#datatable1").DataTable({
+    datatableApi = jQuery("#datatable").DataTable({
         "ajax": {
             "url": ajaxUrl + "vacancies/",
             "dataSrc": ""
@@ -99,7 +95,7 @@ jQuery(document).ready(function () {
         "info": false,
         "columns": [
             {"data": "name"},
-            {"data": "publised_at",
+            {"data": "published_at",
                 "render": function (data, type, row) {return "<a href=meeting/" + row.id + "/>" + data + ""}},
             {"data": "employer"},
             {"data": "salary"}

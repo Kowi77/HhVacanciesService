@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kov.develop.config.ApplicationContextProvider;
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
+import kov.develop.utils.SalaryConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,14 +67,14 @@ public class HhVacanciesService {
         }
         System.out.println(pages);
 
-        for(int i = 1; i < pages; i++){
+       /* for(int i = 1; i < pages; i++){
             log.info("PAGE #### " + i);
             try {
                 LoadAndSaveVacanciesFromHh(getJSON(URL + i, 1000));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     private static Integer LoadAndSaveVacanciesFromHh(String json) throws IOException {
@@ -83,9 +84,7 @@ public class HhVacanciesService {
 
         while(vacancies.hasNext()) {
             JsonNode vacancy = vacancies.next();
-            String salary = vacancy.at("/salary/from") + " - " + vacancy.at("/salary/to") + " " + vacancy.at("/salary/currency");
-            salary = salary.trim().equals("-")? "" : salary;
-            //TODO format salary
+            String salary = SalaryConverter.convertFromHh(vacancy.at("/salary/from").asText(), vacancy.at("/salary/to").asText(), vacancy.at("/salary/currency").asText());
             LocalDateTime date = LocalDateTime.parse(vacancy.at("/published_at").asText().substring(0, 16));
             String name = vacancy.at("/name").asText();
             String employer = vacancy.at("/employer/name").asText();

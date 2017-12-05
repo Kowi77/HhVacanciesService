@@ -7,6 +7,8 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Controller
@@ -18,9 +20,7 @@ public class LiferayController {
      */
     @RenderMapping
     public String renderLandingPage(Model model, PortletRequest portletRequest, PortletResponse portletResponse) {
-
-        model.addAttribute("today", new Date());
-
+        model.addAttribute("today", LocalDate.now());
         return "view";
     }
 }
