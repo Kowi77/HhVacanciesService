@@ -26,7 +26,7 @@ public class Vacancy implements Serializable{
 
     @Column(name = "name")
     @NotNull
-    @Size(max = 100)
+    @Size(max = 1000)
     private String name;
 
     @Column(name = "date")
@@ -34,11 +34,11 @@ public class Vacancy implements Serializable{
     private LocalDateTime published_at;
 
     @Column(name = "employer")
-    @Size(max = 60)
+    @Size(max = 1000)
     private String employer;
 
     @Column(name = "salary")
-    @Size(max = 30)
+    @Size(max = 150)
     private String salary;
 
     public Vacancy(@JsonProperty("name") String name,

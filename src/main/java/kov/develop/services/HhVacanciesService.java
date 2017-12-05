@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kov.develop.config.ApplicationContextProvider;
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedReader;
@@ -15,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.List;
 
 public class HhVacanciesService {
 
@@ -24,7 +28,11 @@ public class HhVacanciesService {
     private static String PER_PAGE = "50";                                     // количество вакансий в одном запросе
     private static String URL = HH_VACANCIES_URL + "?area=" + AREA_ID + "&specialization=" + SPECIALIZATION + "&per_page=" + PER_PAGE + "&page=";
 
-    //private final VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
+    private static List<Vacancy> vacancies;
+
+    private static final Logger log = LogManager.getLogger(HhVacanciesService.class);
+
+    private static VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
 
 
 
@@ -33,8 +41,8 @@ public class HhVacanciesService {
 
     public static void main(String[] args) throws Exception {
 
-        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
-        System.out.println(ctx);
+       // ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
+       // System.out.println(ctx);
 
       HhVacanciesService vr = new HhVacanciesService();
 
@@ -43,20 +51,38 @@ public class HhVacanciesService {
         int pages = vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + "0", 1000));
         System.out.println(pages);
 
-      /*  for(int i = 1; i < pages; i++){
+        for(int i = 1; i < pages; i++){
             System.out.println("PAGE #### " + i);
             vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + i, 1000));
-        }*/
+        }
     }
 
-    private Integer LoadAndSaveVacanciesFromHh(String json) throws IOException {
+    public static void refreshDbFromHh(){
+        int pages = 0;
+        try {
+            pages = LoadAndSaveVacanciesFromHh(getJSON(URL + "0", 1000));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(pages);
+
+        for(int i = 1; i < pages; i++){
+            log.info("PAGE #### " + i);
+            try {
+                LoadAndSaveVacanciesFromHh(getJSON(URL + i, 1000));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static Integer LoadAndSaveVacanciesFromHh(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodes = objectMapper.readTree(json).path("items");
         Iterator<JsonNode> vacancies = nodes.elements();
 
         while(vacancies.hasNext()) {
             JsonNode vacancy = vacancies.next();
-
             String salary = vacancy.at("/salary/from") + " - " + vacancy.at("/salary/to") + " " + vacancy.at("/salary/currency");
             salary = salary.trim().equals("-")? "" : salary;
             //TODO format salary
@@ -64,15 +90,12 @@ public class HhVacanciesService {
             String name = vacancy.at("/name").asText();
             String employer = vacancy.at("/employer/name").asText();
             Vacancy vacancy1 = new Vacancy(name, date, employer, salary);
-            System.out.println(vacancy1);
-            //repository.aaa();
-
+           log.info(repository.save(vacancy1));
         }
-
         return objectMapper.readTree(json).at("/pages").asInt(); //количество страниц для скачивания
     }
 
-    private String getJSON(String url, int timeout) {
+    private static String getJSON(String url, int timeout) {
         HttpURLConnection c = null;
         try {
             java.net.URL u = new URL(url);
@@ -100,7 +123,6 @@ public class HhVacanciesService {
             }
 
         }
-
         catch (MalformedURLException ex) {
         } catch (IOException ex) {
         } finally {
