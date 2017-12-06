@@ -1,71 +1,26 @@
-/*YUI().use(
-    'aui-datatable',
-    function(Y) {
-        var columns = ['name', 'address', 'city', 'state'];
-
-        var data = [
-            {address: '1236 Some Street', city: 'San Francisco', name: 'John A. Smith', state: 'CA'},
-            {address: '3271 Another Ave', city: 'New York', name: 'Joan B. Jones', state: 'NY'},
-            {address: '9996 Random Road', city: 'Los Angeles', name: 'Bob C. Uncle', state: 'CA'},
-            {address: '1623 Some Street', city: 'San Francisco', name: 'John D. Smith', state: 'CA'},
-            {address: '9899 Random Road', city: 'Los Angeles', name: 'Bob F. Uncle', state: 'CA'}
-        ];
-
-        new Y.DataTable.Base(
-            {
-                columnset: columns,
-                recordset: data
-            }
-        ).render('#vacancyTable');
-    }
-);*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*$('.dropdown')
+    .dropdown({
+        action: 'hide',
+        onChange: function(value, text, $selectedItem) {
+            alert(value + "***" + text + "***" + $selectedItem)
+        }
+    });*/
 
 var ajaxUrl = "services/";
 var datatableApi;
 var form=$('#detailsForm');
 
-/*$.ajaxSetup({
+$.ajaxSetup({
     converters: {
         "text json": function (stringData) {
             var json = JSON.parse(stringData);
             $(json).each(function () {
-                this.date = this.date.replace('T', ' ').substr(0, 16);
+                this.published_at = this.published_at[0] + "-" + this.published_at[1] + "-" + this.published_at[2] + " " + this.published_at[3] + ":" + this.published_at[4];
             });
             return json;
         }
     }
-});*/
+});
 
 //Отрисовка таблицы отфильтрованными данными
 function updateTableByData(data) {
@@ -91,17 +46,17 @@ jQuery(document).ready(function () {
             "url": ajaxUrl + "vacancies/",
             "dataSrc": ""
         },
-        "paging": false,
+        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+        "pageLength": 10,
         "info": false,
         "columns": [
             {"data": "name"},
-            {"data": "published_at",
-                "render": function (data, type, row) {return "<a href=meeting/" + row.id + "/>" + data + ""}},
+            {"data": "published_at"},
             {"data": "employer"},
             {"data": "salary"}
         ],
         "order": [[0,"asc"]],
-        "initComplete": errorHandling
+        /*"initComplete": errorHandling*/
     });
 });
 

@@ -8,8 +8,6 @@ import kov.develop.repository.VacancyRepository;
 import kov.develop.utils.SalaryConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,20 +16,25 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-public class HhVacanciesService {
+public class HhVacancyService {
 
-    private static String AREA_ID = "4";                                        // = Новосибирск
-    private static String SPECIALIZATION = "1";                                 // = Информационные технологии, интернет, телеком
-    private static String HH_VACANCIES_URL = "https://api.hh.ru/vacancies"; // базовый URL поиска
+    private static String AREA_ID = "1202";                                        // Новосибирск (по умолчанию)
+    private static String SPECIALIZATION = "1";                                 // Информационные технологии, интернет, телеком (по умолчанию)
+    private static String HH_URL = "https://api.hh.ru";                       // базовый поиска
+    private static String HH_VACANCIES_URL = "https://api.hh.ru/vacancies"; // базовый URL поиска вакансий
     private static String PER_PAGE = "50";                                     // количество вакансий в одном запросе
     private static String URL = HH_VACANCIES_URL + "?area=" + AREA_ID + "&specialization=" + SPECIALIZATION + "&per_page=" + PER_PAGE + "&page=";
 
     private static List<Vacancy> vacancies;
 
-    private static final Logger log = LogManager.getLogger(HhVacanciesService.class);
+
+
+    private static final Logger log = LogManager.getLogger(HhVacancyService.class);
 
     private static VacancyRepository repository = (VacancyRepository) ApplicationContextProvider.getApplicationContext().getBean("vacancyRepository");
 
@@ -45,17 +48,12 @@ public class HhVacanciesService {
        // ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
        // System.out.println(ctx);
 
-      HhVacanciesService vr = new HhVacanciesService();
-
+      HhVacancyService vr = new HhVacancyService();
+      //regionsMap = new HashMap<>();
      // VacancyRepository repository = (VacancyRepository) ctx.getBean("vacancyRepository");
 
-        int pages = vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + "0", 1000));
-        System.out.println(pages);
+        vr.LoadAndSaveSpecializationsFromHh(vr.getJSON("https://api.hh.ru/specializations", 1000));
 
-        for(int i = 1; i < pages; i++){
-            System.out.println("PAGE #### " + i);
-            vr.LoadAndSaveVacanciesFromHh(vr.getJSON(URL + i, 1000));
-        }
     }
 
     public static void refreshDbFromHh(){
@@ -77,6 +75,26 @@ public class HhVacanciesService {
         }*/
     }
 
+    public static Map<Integer, String> getRegions() {
+        Map<Integer, String> regionsMap = new HashMap<>();
+        try {
+            regionsMap = LoadAndSaveRegionsFromHh(getJSON(HH_URL + "/areas/113", 1000));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return regionsMap;
+    }
+
+    public static Map<Integer, String> getSpecializations() {
+        Map<Integer, String> specMap = new HashMap<>();
+        try {
+            specMap = LoadAndSaveSpecializationsFromHh(getJSON(HH_URL + "/specializations", 1000));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return specMap;
+    }
+
     private static Integer LoadAndSaveVacanciesFromHh(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodes = objectMapper.readTree(json).path("items");
@@ -89,9 +107,41 @@ public class HhVacanciesService {
             String name = vacancy.at("/name").asText();
             String employer = vacancy.at("/employer/name").asText();
             Vacancy vacancy1 = new Vacancy(name, date, employer, salary);
-           log.info(repository.save(vacancy1));
+            log.info(repository.save(vacancy1));
         }
         return objectMapper.readTree(json).at("/pages").asInt(); //количество страниц для скачивания
+    }
+
+    private static Map<Integer, String> LoadAndSaveRegionsFromHh(String json) throws IOException {
+        Map<Integer, String> regionsMap = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode nodes = objectMapper.readTree(json).path("areas");
+        Iterator<JsonNode> regions = nodes.elements();
+
+        while(regions.hasNext()) {
+            JsonNode region = regions.next();
+            Integer id =region.at("/id").asInt();
+            String name = region.at("/name").asText();
+            regionsMap.put(id, name);
+            log.info(id + " " + name);
+        }
+        return regionsMap;
+    }
+
+    private static Map<Integer, String> LoadAndSaveSpecializationsFromHh(String json) throws IOException {
+        Map<Integer, String> specMap = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode nodes = objectMapper.readTree(json);
+        Iterator<JsonNode> specs = nodes.elements();
+
+        while(specs.hasNext()) {
+            JsonNode spec = specs.next();
+            Integer id =spec.at("/id").asInt();
+            String name = spec.at("/name").asText();
+            specMap.put(id, name);
+            log.info(id + " " + name);
+        }
+        return specMap;
     }
 
     private static String getJSON(String url, int timeout) {

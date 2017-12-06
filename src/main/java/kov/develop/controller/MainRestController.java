@@ -2,8 +2,7 @@ package kov.develop.controller;
 
 import kov.develop.model.Vacancy;
 import kov.develop.repository.VacancyRepository;
-import kov.develop.repository.VacancyRepositoryImpl;
-import kov.develop.services.HhVacanciesService;
+import kov.develop.services.HhVacancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ public class MainRestController {
     @RequestMapping(value = "/vacancies", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Vacancy> getUsers(){
-        HhVacanciesService.refreshDbFromHh();
+        HhVacancyService.refreshDbFromHh();
         return repository.findAll();
     }
 

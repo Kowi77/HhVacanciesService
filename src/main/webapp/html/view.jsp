@@ -19,7 +19,6 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@ taglib prefix="aui" uri="http://liferay.com/tld/aui" %>--%>
 <html>
 <portlet:defineObjects />
 
@@ -31,18 +30,38 @@
     <%--<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"> --%>
 
 
-    <link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">
+    <%--<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">--%>
     <link href="sort_asc.png" type="img">
     <link href="sort_both.png" type="img">
     <link rel="stylesheet" href="css/datatables.min.css">
 
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js" defer></script>
+   <%-- <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js" defer></script>--%>
     <script type="text/javascript" src="js/datatables.min.js"></script>
 
 </head>
 <body>
-<h1>Список доступных вакансий на ${today}</h1>
+<h1>Список доступных вакансий на ${today} регионе </h1>
+
+<%--<div class="dropdown">
+    <input name="region" type="hidden">
+    <i class="dropdown icon"></i>
+    <div class="menu">
+        <c:forEach var="reg" items="${regions}">
+            <div class="item" data-value="111">${reg}</div>
+        </c:forEach>
+    </div>
+</div>--%>
+
+<%--<div class="dropdown" id="eployerFilter">
+
+    <ul class="dropdown-menu"
+    <c:forEach var="reg" items="${regions}">
+        <li><a onclick="selectRegion(${reg[0]})">${reg[1]}</a></li>
+    </c:forEach>
+    </ul>
+</div>--%>
+
 <div class="container-fluid">
     <h2>Список вакансий</h2>
     <table class="table table-striped display" id="datatable">
