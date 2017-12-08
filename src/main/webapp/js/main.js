@@ -1,10 +1,11 @@
-var ajaxUrl = "services/";
+var ajaxUrl = "services/"; //Базовый URL
 var datatableApi;
-var areas = [];
-var specializations = [];
-var area = 1202; //По умолчанию Новосибирская область
-var specialization = 1; //По умолчанию Информационные технологии
+var areas = [];             //Список регионов
+var specializations = []; //Список профессиональных областей
+var area = 1202;            //По умолчанию Новосибирская область
+var specialization = 1;   //По умолчанию Информационные технологии
 
+// Конвертация даты
 $.ajaxSetup({
     converters: {
         "text json": function (stringData) {
@@ -17,11 +18,7 @@ $.ajaxSetup({
     }
 });
 
-//Отрисовка таблицы отфильтрованными данными
-/*function updateTableByData(data) {
-    datatableApi.clear().rows.add(data).draw();
-}*/
-
+//Новый поиск вакансий
 function updateTable(ar, sp) {
     area = ar;
     specialization = sp;
@@ -38,7 +35,6 @@ function updateTable(ar, sp) {
     });
 }
 
-
 function getSpecializations() {
     $.ajax({
         type: "GET",
@@ -51,6 +47,7 @@ function getSpecializations() {
             specializations.forEach(function (sp) {
                 $("#specs").append("<option value=" + sp.id + ">" + sp.name + "</option>");
             });
+            $("option[value=" + specialization + "]").prop("selected", true)
         },
         error: function (data) {
         }
@@ -69,8 +66,9 @@ function getAreas() {
             areas.forEach(function (ar) {
                 $("#areas").append("<option value=" + ar.id + ">" + ar.name + "</option>");
             });
+            $("option[value=" + area + "]").prop("selected", true)
         },
-        error: function (data) {
+        error: function () {
         }
     });
 }
@@ -87,7 +85,7 @@ jQuery(document).ready(function () {
             "dataSrc": ""
         },
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-        "pageLength": 10,
+        "pageLength": 25,
         "info": false,
         "columns": [
             {"data": "name"},
