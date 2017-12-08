@@ -1,19 +1,3 @@
-<%--
-/**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- */
---%>
-
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
@@ -24,46 +8,23 @@
 
 <head>
     <base href="${pageContext.request.contextPath}/"/>
-    <%--<script type="text/javascript" src="webjars/datatables/1.10.15/media/js/jquery.dataTables.min.js" defer></script>--%>
-    <%--<script type="text/javascript" src="webjars/datatables/1.10.15/media/js/dataTables.bootstrap.min.js" defer></script>--%>
-
-    <%--<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"> --%>
-
-
-    <%--<link rel="stylesheet" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css">--%>
-    <link href="sort_asc.png" type="img">
-    <link href="sort_both.png" type="img">
-    <link rel="stylesheet" href="css/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-   <%-- <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js" defer></script>--%>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/datatables.min.js"></script>
 
 </head>
 <body>
-<h1>Список доступных вакансий на ${today} регионе </h1>
-
-<%--<div class="dropdown">
-    <input name="region" type="hidden">
-    <i class="dropdown icon"></i>
-    <div class="menu">
-        <c:forEach var="reg" items="${regions}">
-            <div class="item" data-value="111">${reg}</div>
-        </c:forEach>
-    </div>
-</div>--%>
-
-<%--<div class="dropdown" id="eployerFilter">
-
-    <ul class="dropdown-menu"
-    <c:forEach var="reg" items="${regions}">
-        <li><a onclick="selectRegion(${reg[0]})">${reg[1]}</a></li>
-    </c:forEach>
-    </ul>
-</div>--%>
 
 <div class="container-fluid">
-    <h2>Список вакансий</h2>
+    <select name="areas" id="areas"></select>
+    <select name="specs" id="specs"></select>
+    <button onclick="updateTable($('#areas :selected').val(), $('#specs :selected').val())">Найти вакансии</button>
+</div>
+<div class="container-fluid">
+    <h2>Список вакансий на ${today}</h2>
     <table class="table table-striped display" id="datatable">
         <thead>
         <tr>

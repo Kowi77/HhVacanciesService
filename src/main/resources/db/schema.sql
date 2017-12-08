@@ -8,3 +8,5 @@ CREATE TABLE vacancies
   employer VARCHAR(1000) NOT NULL,
   salary VARCHAR(100)
 );
+
+DELETE FROM vacancies;

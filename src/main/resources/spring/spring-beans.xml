@@ -38,7 +38,7 @@
     </bean>
 
   <!--  <jdbc:initialize-database data-source="dataSource" enabled="true">
-        <jdbc:script location="classpath:db/schema.sql"/>
+        <jdbc:script location="E:\Java\HhVacancies\src\main\resources\db\schema.sql"/>
         <jdbc:script encoding="utf-8"/>
     </jdbc:initialize-database>-->
 

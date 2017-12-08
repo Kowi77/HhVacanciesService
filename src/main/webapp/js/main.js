@@ -1,14 +1,9 @@
-/*$('.dropdown')
-    .dropdown({
-        action: 'hide',
-        onChange: function(value, text, $selectedItem) {
-            alert(value + "***" + text + "***" + $selectedItem)
-        }
-    });*/
-
 var ajaxUrl = "services/";
 var datatableApi;
-var form=$('#detailsForm');
+var areas = [];
+var specializations = [];
+var area = 1202; //По умолчанию Новосибирская область
+var specialization = 1; //По умолчанию Информационные технологии
 
 $.ajaxSetup({
     converters: {
@@ -23,27 +18,72 @@ $.ajaxSetup({
 });
 
 //Отрисовка таблицы отфильтрованными данными
-function updateTableByData(data) {
+/*function updateTableByData(data) {
     datatableApi.clear().rows.add(data).draw();
-}
+}*/
 
-function updateTable() {
+function updateTable(ar, sp) {
+    area = ar;
+    specialization = sp;
     $.ajax({
         type: "GET",
-        url: ajaxUrl + "vacancies/",
+        url: ajaxUrl + "vacancies/"+ area + "/" + specialization,
         dataType: 'json',
         success: function (data) {
+            data.forEach(function (vac) {
+                vac.published_at = vac.published_at[0] + "-" + vac.published_at[1] + "-" + vac.published_at[2] + " " + vac.published_at[3] + ":" + vac.published_at[4];
+            });
             datatableApi.clear().rows.add(data).draw();
         }
     });
 }
+
+
+function getSpecializations() {
+    $.ajax({
+        type: "GET",
+        url: ajaxUrl + "specializations/",
+        dataType: 'json',
+        success: function (data) {
+            $('#specs :selected').val(specialization)
+            specializations = data;
+            $("#specs").empty();
+            specializations.forEach(function (sp) {
+                $("#specs").append("<option value=" + sp.id + ">" + sp.name + "</option>");
+            });
+        },
+        error: function (data) {
+        }
+    });
+}
+
+function getAreas() {
+    $.ajax({
+        type: "GET",
+        url: ajaxUrl + "areas/",
+        dataType: 'json',
+        success: function (data) {
+            areas = data;
+            $('#areas :selected').val(area)
+            $("#areas").empty();
+            areas.forEach(function (ar) {
+                $("#areas").append("<option value=" + ar.id + ">" + ar.name + "</option>");
+            });
+        },
+        error: function (data) {
+        }
+    });
+}
+
+
+
 
 //Datatable
 jQuery(document).ready(function () {
     $.noConflict();
     datatableApi = jQuery("#datatable").DataTable({
         "ajax": {
-            "url": ajaxUrl + "vacancies/",
+            "url": ajaxUrl + "vacancies/" + area + "/" + specialization,
             "dataSrc": ""
         },
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
@@ -58,8 +98,9 @@ jQuery(document).ready(function () {
         "order": [[0,"asc"]],
         /*"initComplete": errorHandling*/
     });
+    getAreas();
+    getSpecializations();
 });
-
 
 //User's noties creating
 
