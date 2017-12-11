@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static kov.develop.utils.JsonUtil.getJSON;
 
@@ -18,30 +19,35 @@ import static kov.develop.utils.JsonUtil.getJSON;
 public class AreaAndSpecializationService {
 
     private static String HH_URL = "https://api.hh.ru";                       // базовый URL поиска
+    private static String RUSSIA_ID = "113";
 
     private static final Logger log = LogManager.getLogger(AreaAndSpecializationService.class);
 
-    public static List<Area> getRegions() {
+    public List<Area> getRegions() {
        List<Area> regions = new ArrayList<>();
         try {
-            regions = LoadAndSaveRegionsFromHh(getJSON(HH_URL + "/areas/113", 1000));
+            regions = LoadAndSaveRegionsFromHh(getJSON(HH_URL + "/areas/"  + RUSSIA_ID, 1000));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
+        log.info("Get region's list");
+        regions = regions.stream().sorted((a, b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
         return regions;
     }
 
-    public static List<Specialization> getSpecializations() {
+    public List<Specialization> getSpecializations() {
         List<Specialization> specList = new ArrayList<>();
         try {
             specList = LoadAndSaveSpecializationsFromHh(getJSON(HH_URL + "/specializations", 1000));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
+        log.info("Get specialization's list");
+        specList = specList.stream().sorted((a, b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
         return specList;
     }
 
-    private static List<Area> LoadAndSaveRegionsFromHh(String json) throws IOException {
+    private List<Area> LoadAndSaveRegionsFromHh(String json) throws IOException {
         List<Area> regionsList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodes = objectMapper.readTree(json).path("areas");
@@ -57,7 +63,7 @@ public class AreaAndSpecializationService {
         return regionsList;
     }
 
-    private static List<Specialization> LoadAndSaveSpecializationsFromHh(String json) throws IOException {
+    private List<Specialization> LoadAndSaveSpecializationsFromHh(String json) throws IOException {
         List<Specialization> specList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodes = objectMapper.readTree(json);

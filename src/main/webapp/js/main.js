@@ -2,8 +2,8 @@ var ajaxUrl = "services/"; //Базовый URL
 var datatableApi;
 var areas = [];             //Список регионов
 var specializations = []; //Список профессиональных областей
-var area = 1202;            //По умолчанию Новосибирская область
-var specialization = 1;   //По умолчанию Информационные технологии
+var area = 1202;            //По умолчанию: Новосибирская область
+var specialization = 1;   //По умолчанию: Информационные технологии
 
 // Конвертация даты
 $.ajaxSetup({
@@ -30,7 +30,10 @@ function updateTable(ar, sp) {
             data.forEach(function (vac) {
                 vac.published_at = vac.published_at[0] + "-" + vac.published_at[1] + "-" + vac.published_at[2] + " " + vac.published_at[3] + ":" + vac.published_at[4];
             });
-            datatableApi.clear().rows.add(data).draw();
+            datatableApi.clear().search("").rows.add(data).draw();
+        },
+        error: function () {
+            errorHandling();
         }
     });
 }
@@ -49,7 +52,8 @@ function getSpecializations() {
             });
             $("option[value=" + specialization + "]").prop("selected", true)
         },
-        error: function (data) {
+        error: function () {
+            errorHandling();
         }
     });
 }
@@ -69,12 +73,10 @@ function getAreas() {
             $("option[value=" + area + "]").prop("selected", true)
         },
         error: function () {
+            errorHandling();
         }
     });
 }
-
-
-
 
 //Datatable
 jQuery(document).ready(function () {
@@ -86,6 +88,7 @@ jQuery(document).ready(function () {
         },
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         "pageLength": 25,
+        "bAutoWidth": true,
         "info": false,
         "columns": [
             {"data": "name"},
@@ -94,7 +97,6 @@ jQuery(document).ready(function () {
             {"data": "salary"}
         ],
         "order": [[0,"asc"]],
-        /*"initComplete": errorHandling*/
     });
     getAreas();
     getSpecializations();

@@ -5,8 +5,8 @@ import kov.develop.model.Specialization;
 import kov.develop.model.Vacancy;
 import kov.develop.services.AreaAndSpecializationService;
 import kov.develop.services.VacancyService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +22,6 @@ public class MainRestController {
 
     @Autowired
     AreaAndSpecializationService utilService;
-
-    @RequestMapping(value = "/vacancies", method = RequestMethod.GET)
-    public List<Vacancy> getVacacies(){
-        service.refreshDbFromHh();
-        return service.findAll();
-    }
 
     @RequestMapping(value = "/vacancies/{areaId}/{specId}", method = RequestMethod.GET)
     public List<Vacancy> getVacaciesByAreaAndSpec(@PathVariable("areaId") String areaid, @PathVariable("specId") String specId){

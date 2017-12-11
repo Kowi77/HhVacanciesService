@@ -13,16 +13,16 @@ import java.util.List;
 
 @Getter
 @Setter
-@Data
 @ToString
-@RequiredArgsConstructor
+@EqualsAndHashCode(exclude = "id")
+@NoArgsConstructor
 @Entity
 @Table(name = "vacancies")
 public class Vacancy implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @Column(name = "name")
     @NotNull
@@ -51,5 +51,11 @@ public class Vacancy implements Serializable{
         this.salary = salary;
     }
 
-
+    public Vacancy(Integer id, String name, LocalDateTime published_at, String employer, String salary) {
+        this.id = id;
+        this.name = name;
+        this.published_at = published_at;
+        this.employer = employer;
+        this.salary = salary;
+    }
 }
